@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css"
 import { getId } from "./utils";
 import { TodoItem } from "./interface";
@@ -11,6 +11,17 @@ interface InputProps {
 interface ItemWrapperProps {
   item: TodoItem;
   onMark: (item: TodoItem) => void
+}
+
+interface FilterProps {
+  currFilter: FilterName;
+  setFilter: (filter: FilterName) => void
+}
+
+enum FilterName {
+  ALL = "ALL",
+  TODO = "TODO",
+  DONE = "DONE"
 }
 
 const InputWrapper = ({ onEnter }: InputProps) => {
@@ -40,8 +51,26 @@ const ItemWrapper = ({ item, onMark }: ItemWrapperProps) => {
   </div>
 }
 
+const Filter = ({ currFilter, setFilter }: FilterProps) => {
+  const getFilterClassName = (filterName: FilterName) => {
+    return [
+      "filter-item",
+      currFilter === filterName ? "filter-item-active" : ""
+    ].join(" ")
+  }
+  return <div className="filter">
+    <div className="filter-title">Filter: </div>
+    <div className={getFilterClassName(FilterName.ALL)} onClick={() => setFilter(FilterName.ALL)}>all</div>
+    <div className={getFilterClassName(FilterName.TODO)} onClick={() => setFilter(FilterName.TODO)}>todo</div>
+    <div className={getFilterClassName(FilterName.DONE)} onClick={() => setFilter(FilterName.DONE)}>done</div>
+  </div>
+}
+
 export default () => {
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
+  const [currList, setCurrList] = useState<TodoItem[]>([]);
+  const [filter, setFilter] = useState(FilterName.ALL);
+  
   const onEnter = (text: string) => {
     setTodoList([
       ...todoList,
@@ -58,7 +87,17 @@ export default () => {
     setTodoList([...todoList]);
   }
 
-  const itemList = todoList.sort(item => item.isDone ? 1 : -1).map(todo => <ItemWrapper
+  useEffect(() => {
+    const listMap = {
+      [FilterName.ALL]: todoList,
+      [FilterName.TODO]: todoList.filter(item => !item.isDone),
+      [FilterName.DONE]: todoList.filter(item => item.isDone),
+    }
+    const list = [...listMap[filter]].sort(item => item.isDone ? 1 : -1);
+    setCurrList(list)
+  }, [todoList, filter])
+
+  const itemList = currList.sort(item => item.isDone ? 1 : -1).map(todo => <ItemWrapper
     item={todo}
     key={todo.id}
     onMark={onMark}
@@ -68,6 +107,7 @@ export default () => {
     <div className="header">TodoList</div>
     <div className="container">
       <InputWrapper onEnter={onEnter} />
+      <Filter currFilter={filter} setFilter={setFilter} />
       <div className="list">
         {itemList}
       </div>

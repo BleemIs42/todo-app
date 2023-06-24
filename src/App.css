@@ -45,7 +45,7 @@ body {
   cursor: pointer;
 }
 
-.filter-active {
+.filter-item-active {
   background-color: aqua;
 }
 
