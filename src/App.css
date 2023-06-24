@@ -1,42 +1,64 @@
-#root {
-  max-width: 1280px;
+html,
+body {
+  background-color: white;
+  color: black;
+}
+
+#root{
   margin: 0 auto;
-  padding: 2rem;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  margin: 100px auto;
+}
+
+.header {
+  margin: 40px 0;
+  width: 100%;
+  font-size: 32px;
+  font-weight: bold;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.container {
+  .input {
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.filter {
+  display: flex;
+  margin: 10px 0;
 }
 
-.card {
-  padding: 2em;
+.filter-item {
+  color: white;
+  margin-left: 10px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: grey;
+  cursor: pointer;
 }
 
-.read-the-docs {
-  color: #888;
+.filter-active {
+  background-color: aqua;
+}
+
+.item-wrapper {
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 10px;
+}
+
+.item-done {
+  text-decoration: line-through;
+  color: gray;
 }

@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/* eslint-disable react-refresh/only-export-components */
+import { useState } from "react";
+import "./App.css"
+import { getId } from "./utils";
+import { TodoItem } from "./interface";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface InputProps {
+  onEnter: (text: string) => void
 }
 
-export default App
+const InputWrapper = ({ onEnter }: InputProps) => {
+  const [value, setValue] = useState("");
+  const onKeyup = (e: any) => {
+    if (e.key === "Enter") {
+      onEnter(e.target.value);
+      setValue("");
+    }
+  }
+  return <input className="input"
+    value={value}
+    onChange={e => setValue(e.target.value)}
+    onKeyUp={onKeyup} />
+}
+
+export default () => {
+  const [todoList, setTodoList] = useState<TodoItem[]>([]);
+  const onEnter = (text: string) => {
+    setTodoList([
+      ...todoList,
+      {
+        id: getId(),
+        text,
+        isDone: false,
+      }])
+  }
+
+  return <div className="wrap">
+    <div className="header">TodoList</div>
+    <div className="container">
+      <InputWrapper onEnter={onEnter} />
+      <div className="list">
+        {
+          todoList.map(todo => <div>{ todo.text }</div>)
+        }
+      </div>
+    </div>
+  </div>
+}
