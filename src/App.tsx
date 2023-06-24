@@ -10,6 +10,7 @@ interface InputProps {
 
 interface ItemWrapperProps {
   item: TodoItem;
+  onMark: (item: TodoItem) => void
 }
 
 const InputWrapper = ({ onEnter }: InputProps) => {
@@ -26,9 +27,15 @@ const InputWrapper = ({ onEnter }: InputProps) => {
     onKeyUp={onKeyup} />
 }
 
-const ItemWrapper = ({ item }: ItemWrapperProps) => {
+const ItemWrapper = ({ item, onMark }: ItemWrapperProps) => {
+  const onChange = (checked: boolean) => {
+    onMark({
+      ...item,
+      isDone: checked
+    })
+  }
   return <div className="item-wrapper">
-    <input id={item.id} type="checkbox" className="checkbox"/>
+    <input id={item.id} type="checkbox" className="checkbox" checked={item.isDone} onChange={e => onChange(e.target.checked)} />
     <label className={item.isDone ? "item-done" : ""} htmlFor={item.id}>{item.text}</label>
   </div>
 }
@@ -45,17 +52,24 @@ export default () => {
       }])
   }
 
+  const onMark = (todo: TodoItem) => {
+    const index = todoList.findIndex(item => item.id === todo.id);
+    todoList.splice(index, 1, todo);
+    setTodoList([...todoList]);
+  }
+
+  const itemList = todoList.sort(item => item.isDone ? 1 : -1).map(todo => <ItemWrapper
+    item={todo}
+    key={todo.id}
+    onMark={onMark}
+  />)
+
   return <div className="wrap">
     <div className="header">TodoList</div>
     <div className="container">
       <InputWrapper onEnter={onEnter} />
       <div className="list">
-        {
-          todoList.map(todo => <ItemWrapper
-            item={todo}
-            key={todo.id}
-          />)
-        }
+        {itemList}
       </div>
     </div>
   </div>
