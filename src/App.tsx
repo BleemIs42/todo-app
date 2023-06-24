@@ -8,6 +8,10 @@ interface InputProps {
   onEnter: (text: string) => void
 }
 
+interface ItemWrapperProps {
+  item: TodoItem;
+}
+
 const InputWrapper = ({ onEnter }: InputProps) => {
   const [value, setValue] = useState("");
   const onKeyup = (e: any) => {
@@ -20,6 +24,13 @@ const InputWrapper = ({ onEnter }: InputProps) => {
     value={value}
     onChange={e => setValue(e.target.value)}
     onKeyUp={onKeyup} />
+}
+
+const ItemWrapper = ({ item }: ItemWrapperProps) => {
+  return <div className="item-wrapper">
+    <input id={item.id} type="checkbox" className="checkbox"/>
+    <label className={item.isDone ? "item-done" : ""} htmlFor={item.id}>{item.text}</label>
+  </div>
 }
 
 export default () => {
@@ -40,7 +51,10 @@ export default () => {
       <InputWrapper onEnter={onEnter} />
       <div className="list">
         {
-          todoList.map(todo => <div>{ todo.text }</div>)
+          todoList.map(todo => <ItemWrapper
+            item={todo}
+            key={todo.id}
+          />)
         }
       </div>
     </div>
