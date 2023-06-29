@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useState } from "react";
+import { useEffect, useState, KeyboardEvent } from "react";
 import "./App.css"
 import { getId } from "./utils";
 import { TodoItem } from "./interface";
@@ -26,9 +26,9 @@ enum FilterName {
 
 const InputWrapper = ({ onEnter }: InputProps) => {
   const [value, setValue] = useState("");
-  const onKeyup = (e: any) => {
+  const onKeyup = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      onEnter(e.target.value);
+      onEnter(e.currentTarget.value);
       setValue("");
     }
   }
